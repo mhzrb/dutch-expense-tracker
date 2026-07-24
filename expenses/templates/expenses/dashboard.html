@@ -1,0 +1,82 @@
+{% extends "expenses/base.html" %}
+{% block content %}
+<h2 class="mb-4">Dashboard — {{ current_month }}</h2>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card p-3">
+      <div class="text-muted small">Spent this month</div>
+      <div class="fs-3 fw-bold">€{{ total_this_month|floatformat:2 }}</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card p-3">
+      <div class="text-muted small">Monthly budget</div>
+      <div class="fs-3 fw-bold">
+        {% if budget_amount is not None %}€{{ budget_amount|floatformat:2 }}{% else %}
+          <a href="{% url 'budget' %}" class="fs-6">Set a budget</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card p-3">
+      <div class="text-muted small">Remaining</div>
+      <div class="fs-3 fw-bold {% if remaining is not None and remaining < 0 %}text-danger{% endif %}">
+        {% if remaining is not None %}€{{ remaining|floatformat:2 }}{% else %}—{% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-6">
+    <div class="card p-3">
+      <h6>Spending by category (this month)</h6>
+      <canvas id="categoryChart" height="220"></canvas>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card p-3">
+      <h6>Last 6 months trend</h6>
+      <canvas id="trendChart" height="220"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="card p-3">
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <h6 class="mb-0">Recent expenses</h6>
+    <a href="{% url 'expense_create' %}" class="btn btn-sm btn-dark">+ Add expense</a>
+  </div>
+  <table class="table table-sm mb-0">
+    <thead><tr><th>Date</th><th>Category</th><th>Amount</th><th>Note</th></tr></thead>
+    <tbody>
+      {% for e in recent_expenses %}
+      <tr><td>{{ e.date }}</td><td>{{ e.get_category_display }}</td><td>€{{ e.amount }}</td><td>{{ e.note }}</td></tr>
+      {% empty %}
+      <tr><td colspan="4" class="text-muted">No expenses yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+  new Chart(document.getElementById('categoryChart'), {
+    type: 'doughnut',
+    data: {
+      labels: {{ category_labels|safe }},
+      datasets: [{ data: {{ category_totals|safe }}, backgroundColor: ['#0d6efd','#6610f2','#d63384','#fd7e14','#198754','#20c997','#0dcaf0','#adb5bd'] }]
+    }
+  });
+  new Chart(document.getElementById('trendChart'), {
+    type: 'line',
+    data: {
+      labels: {{ monthly_labels|safe }},
+      datasets: [{ label: 'Total €', data: {{ monthly_totals|safe }}, borderColor: '#0d6efd', tension: 0.3 }]
+    },
+    options: { plugins: { legend: { display: false } } }
+  });
+</script>
+{% endblock %}
