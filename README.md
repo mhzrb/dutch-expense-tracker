@@ -18,8 +18,8 @@ actually track spending.
 ## Screenshots
 
 <!-- Add your own screenshots here — see "Adding screenshots" below -->
-![Dashboard](screenshots/dashboard.png)
-![Expense list](screenshots/expense-list.png)
+![Dashboard](screenshots/dashboard.jpg)
+![Expense list](screenshots/expense-list.jpg)
 
 ## Features
 
