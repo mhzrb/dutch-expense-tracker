@@ -6,6 +6,21 @@ insurance), monthly charts, and budget alerts.
 
 100% free to run — SQLite by default, no paid API required.
 
+## Why I built this
+
+I'm currently applying to companies here in the Netherlands and settling
+into a new budget rhythm — rent, groceries, insurance, transport all add up
+differently than what I was used to. I wanted a simple, focused tool built
+specifically around Dutch expense categories instead of a generic finance
+app, and building it myself meant I could shape it exactly around how I
+actually track spending.
+
+## Screenshots
+
+<!-- Add your own screenshots here — see "Adding screenshots" below -->
+![Dashboard](screenshots/dashboard.png)
+![Expense list](screenshots/expense-list.png)
+
 ## Features
 
 - User accounts (sign up / log in) — each user only sees their own data
@@ -75,6 +90,35 @@ expenses/
 Free options: [Railway](https://railway.app), [Render](https://render.com), or
 [Fly.io](https://fly.io) all have free tiers that work well with Django +
 SQLite/Postgres + `gunicorn` (already in requirements.txt).
+
+## What I learned building this
+
+- Structuring a Django project around multiple models with a real
+  relationship (`Expense` and `MonthlyBudget` both tied to `User`) and
+  keeping queries scoped per-user
+- Aggregating data with Django's ORM (`Sum`, `values().annotate()`) to
+  power the dashboard instead of pulling everything into Python
+- Wiring up Chart.js against server-rendered data (passing querysets into
+  templates as JSON) without a separate frontend framework
+- Handling environment-based configuration (`.env`, `DATABASE_URL`
+  switching between SQLite and Postgres) the way a real deployed app would
+
+## Adding screenshots
+
+1. Run the app locally and get it into a good state (a few sample expenses, budget set).
+2. Take screenshots of the dashboard and expense list (in Ubuntu: `Shift+PrtScn` to select an area, or the Screenshot app from the Activities menu).
+3. Inside the project folder, create a folder for them:
+   ```bash
+   mkdir screenshots
+   ```
+4. Save your screenshots there as `dashboard.png` and `expense-list.png` (or update the filenames in this README to match whatever you name them).
+5. Commit and push as usual:
+   ```bash
+   git add screenshots/
+   git commit -m "Add screenshots"
+   git push
+   ```
+   GitHub will automatically render them in this README since the paths above already point to `screenshots/`.
 
 ## License
 
